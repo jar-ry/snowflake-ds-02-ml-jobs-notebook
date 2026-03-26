@@ -113,3 +113,5 @@ Run cells top-to-bottom. The `train_remote()` call submits the job — use `resu
 | [snowflake-ds-setup](https://github.com/jar-ry/snowflake-ds-setup) | Environment setup, data generation, and helper utilities (run this first) |
 | [snowflake-ds-01-notebooks](https://github.com/jar-ry/snowflake-ds-01-notebooks) | Same pipeline running entirely in Snowflake UI (no local setup) |
 | [snowflake-ds-03-ml-jobs-framework](https://github.com/jar-ry/snowflake-ds-03-ml-jobs-framework) | Production-grade modular framework using `submit_directory` |
+| [snowflake-ds-04-feature-store](https://github.com/jar-ry/snowflake-ds-04-feature-store) | Split repo: Feature Store with FeatureViews and Versioned Datasets |
+| [snowflake-ds-04-ml-training](https://github.com/jar-ry/snowflake-ds-04-ml-training) | Split repo: ML Training with training, promotion, inference, monitoring |

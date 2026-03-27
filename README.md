@@ -18,7 +18,7 @@ Develop locally in your favorite IDE and submit compute-heavy work (HPO, trainin
 
 ## What the Notebook Does
 
-The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-to-end, but executes training remotely via ML Jobs:
+The pipeline (`CUSTOMER_VALUE_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-to-end, but executes training remotely via ML Jobs:
 
 | Step | What Happens |
 |------|--------------|
@@ -27,7 +27,7 @@ The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-t
 | **Feature engineering** | Uses imported functions from `feature_engineering_fns.py` (`uc01_load_data`, `uc01_pre_process`) |
 | **FeatureView creation** | Registers a managed FeatureView backed by a Dynamic Table |
 | **Dataset generation** | Builds a versioned Snowflake Dataset from the FeatureView |
-| **HPO + Training (ML Job)** | The `train_remote()` function is decorated with `@remote("CLV_MODEL_POOL_CPU")` — the entire function (including nested `train()`, `build_pipeline()`, `evaluate_model()`) is shipped to the compute pool as an ML Job. The Tuner runs 10 `RandomSearch` trials across 3 target instances. |
+| **HPO + Training (ML Job)** | The `train_remote()` function is decorated with `@remote("CUSTOMER_VALUE_MODEL_POOL_CPU")` — the entire function (including nested `train()`, `build_pipeline()`, `evaluate_model()`) is shipped to the compute pool as an ML Job. The Tuner runs 10 `RandomSearch` trials across 3 target instances. |
 | **Experiment tracking** | Each trial logs params, metrics, and model artifacts via `ExperimentTracking` |
 | **Model promotion** | Selects best trial, sets default version, alias, tag, and copies to `PROD_SCHEMA` |
 | **Inference service** | Deploys the model as a container service on SPCS |
@@ -38,7 +38,7 @@ The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-t
 ```
 02_ml_jobs_notebook/
 ├── README.md                        # This file
-├── CLV_MODEL_NOTEBOOK.ipynb         # Main pipeline notebook (run locally)
+├── CUSTOMER_VALUE_MODEL_NOTEBOOK.ipynb         # Main pipeline notebook (run locally)
 ├── feature_engineering_fns.py       # uc01_load_data, uc01_pre_process
 ├── useful_fns.py                    # Session creation, Registry/FeatureStore helpers,
                                      #   version utilities, SQL formatting
@@ -50,7 +50,7 @@ The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-t
 ┌──────────────────────────┐          ┌──────────────────────────────────────┐
 │      Local Machine       │          │            Snowflake                 │
 │                          │          │                                      │
-│  CLV_MODEL_NOTEBOOK.ipynb│          │  ┌──────────────────────────────┐    │
+│  CUSTOMER_VALUE_MODEL_NOTEBOOK.ipynb│          │  ┌──────────────────────────────┐    │
 │  feature_engineering_fns │  ──────► │  │  Warehouse (Feature Store,   │    │
 │  useful_fns.py           │  Session │  │  Dataset, FeatureViews)      │    │
 │                          │          │  └──────────────────────────────┘    │
@@ -73,7 +73,7 @@ The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-t
 |-|------------------------|---------------------|
 | **Where code lives** | Inline in Snowflake Notebook | Local `.ipynb` + `.py` helper files |
 | **Session** | `get_active_session()` (automatic) | `Session.builder.configs(...)` via `connection.json` |
-| **HPO compute** | `scale_cluster(5)` — scales the notebook cluster | `@remote("CLV_MODEL_POOL_CPU", target_instances=3)` — submits an ML Job |
+| **HPO compute** | `scale_cluster(5)` — scales the notebook cluster | `@remote("CUSTOMER_VALUE_MODEL_POOL_CPU", target_instances=3)` — submits an ML Job |
 | **Code organization** | Self-contained single notebook | Modular: notebook imports from `feature_engineering_fns.py` and `helper/` |
 | **Job lifecycle** | Synchronous (cells block) | Asynchronous: `results.wait()`, `results.show_logs()`, `results.result()` |
 | **Best for** | Learning, demos, fast iteration | IDE-first teams who want SPCS-backed distributed training |
@@ -83,14 +83,14 @@ The pipeline (`CLV_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_notebooks` end-t
 - Completed `Step01_Setup.ipynb` (creates database, tables, mock data)
 - Local conda environment (`conda activate snowflake_ds`) with `snowflake-ml-python>=1.30.0`
 - A `connection.json` file in the notebook's parent directory (or adjust the path in cell 6)
-- A CPU compute pool (e.g. `CLV_MODEL_POOL_CPU`) provisioned in Snowflake
+- A CPU compute pool (e.g. `CUSTOMER_VALUE_MODEL_POOL_CPU`) provisioned in Snowflake
 - A stage named `payload_stage` for ML Job artifacts
 
 ## Quick Start
 
 ```bash
 conda activate snowflake_ds
-jupyter lab implementations/02_ml_jobs_notebook/CLV_MODEL_NOTEBOOK.ipynb
+jupyter lab implementations/02_ml_jobs_notebook/CUSTOMER_VALUE_MODEL_NOTEBOOK.ipynb
 ```
 
 Run cells top-to-bottom. The `train_remote()` call submits the job — use `results.wait()` to block until complete, then inspect with `results.show_logs()` and `results.result()`.

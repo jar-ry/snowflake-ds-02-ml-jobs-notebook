@@ -212,6 +212,6 @@ def create_SF_Session(
 
 def get_spine_df(dataframe):
     asof_date = datetime.now() 
-    spine_sdf =  dataframe.feature_df.group_by('CUSTOMER_ID').agg( F.lit(asof_date.strftime('%Y-%m-%d')).as_('ASOF_DATE'))#.limit(10)
+    spine_sdf =  dataframe.feature_df.group_by('CUSTOMER_ID').agg( F.lit(asof_date.strftime('%Y-%m-%d %H:%M:%S')).as_('ASOF_DATE'))
     spine_sdf = spine_sdf.with_column("col_1", F.lit("values1"))
     return spine_sdf

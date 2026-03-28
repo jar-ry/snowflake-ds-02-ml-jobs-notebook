@@ -30,6 +30,7 @@ The pipeline (`CUSTOMER_VALUE_MODEL_NOTEBOOK.ipynb`) mirrors `01_snowflake_noteb
 | **HPO + Training (ML Job)** | The `train_remote()` function is decorated with `@remote("CUSTOMER_VALUE_MODEL_POOL_CPU")` — the entire function (including nested `train()`, `build_pipeline()`, `evaluate_model()`) is shipped to the compute pool as an ML Job. The Tuner runs 10 `RandomSearch` trials across 3 target instances. |
 | **Experiment tracking** | Each trial logs params, metrics, and model artifacts via `ExperimentTracking` |
 | **Model promotion** | Selects best trial, sets default version, alias, tag, and copies to `PROD_SCHEMA` |
+| **Model explainability** | Runs the best model's `explain` function on a sample of training data, visualises SHAP values with a violin plot |
 | **Inference service** | Deploys the model as a container service on SPCS |
 | **Model monitoring** | Configures a `ModelMonitor` for ongoing tracking |
 
@@ -105,6 +106,7 @@ Run cells top-to-bottom. The `train_remote()` call submits the job — use `resu
 - Tuner / HPO (`tune.Tuner`, `RandomSearch`, 3 target instances)
 - SPCS Model Service (real-time inference)
 - Model Monitoring
+- Model Explainability (SHAP-based `explain` + `plot_violin`)
 
 ## Related Repos
 
